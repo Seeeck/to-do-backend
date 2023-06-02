@@ -8,6 +8,7 @@ class TaskRepositorie implements TaskInterface {
 
 
     createTask(request: Request, response: Response) {
+      ;
         try {
             return ApiResponse.successResponse(response, {}, 202);
         } catch (e) {

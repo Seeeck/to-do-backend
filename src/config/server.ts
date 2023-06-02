@@ -1,21 +1,26 @@
 
-import express, { Request, Response, Application } from 'express';
+import express, { Request, Response, Application, Router } from 'express';
 import Database from './database';
+import expressListRoutes from 'express-list-routes';
 
 const taskRoute = require('../routes/taskRoute');
-const userRoute=require('../routes/userRoute');
+const userRoute = require('../routes/userRoute');
 
 class Server {
     app: Application = express();
     db?: Database;
-    port:number=3000;
-    
+    port: number = 3001;
+
 
     constructor() {
         //Inicializo la base de datos
         this.initDb();
-        this.initExpress();
+        this.initApp();
+        this.initMiddlewares();
         this.initRoutes();
+      
+        expressListRoutes(this.app);
+       
     };
 
     initDb() {
@@ -29,20 +34,20 @@ class Server {
         });
     };
 
-    initExpress() {
+    initApp() {
         // respond with "hello world" when a GET request is made to the homepage
         this.app.listen(this.port, () => {
             console.log(`Server started at port ${this.port}`);
-          });
+        });
     };
 
-    initRoutes(){
-        this.app.use('/task/', taskRoute)
-        this.app.use('/user/', userRoute)
+    initRoutes() {
+        this.app.use('/task', taskRoute)
+        this.app.use('/user', userRoute)
     }
 
-    initMiddlewares(){
-
+    initMiddlewares() {
+        this.app.use(express.json());
     }
 }
 

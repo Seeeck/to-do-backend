@@ -1,6 +1,9 @@
 import { Response, Request } from "express"
 import TaskController from "../controllers/taskController"
 import TaskRepositorie from "../repositories/taskRepositorie"
+import { checkSchema } from "express-validator"
+import createTaskSchema from "../schemas/createTaskSchema"
+import RequestValidationMiddleware from "../middlewares/requestValidationMiddleware"
 
 const express = require('express')
 const taskRoute = express.Router()
@@ -17,11 +20,13 @@ const task_controller = new TaskController(task_repositorie);
 //             -El nombre debe tener 40 caracteres maximo minimo 4
 //             -La descripcion debe tener 250 caracteres, opcional
 
-taskRoute.post('/create-task', (req: Request, res: Response) => {
+taskRoute.post('/create-task', checkSchema(createTaskSchema), RequestValidationMiddleware, (req: Request, res: Response) => {
     return task_controller.createTask(req, res);
 })
 
 taskRoute.get('/list-task', (req: Request, res: Response) => {
+
+    console.log('listing tasks...')
     return task_controller.listTask(req, res);
 })
 

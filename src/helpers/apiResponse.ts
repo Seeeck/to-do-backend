@@ -4,21 +4,21 @@ class ApiResponse {
     static successResponse(res: Response, data: any, code: number = 200) {
         return res.status(code).json({
             success: {
-                codigoRespuesta: 1,
-                descripcionRespuesta: data,
+                codeResponse: 1,
+                responseDescription: data,
             },
-            codigo: code,
+            code: code,
         });
     }
 
     static errorResponse(res: Response, message: string, code: number = 500) {
         return res.status(code).json({
             error: {
-                codigoRespuesta: 0,
-                descripcionRespuesta: 'Error',
-                detalleRespuesta: message,
+                codeResponse: 0,
+                responseDescription: 'Error',
+                responseDetail: message,
             },
-            codigo: code,
+            code: code,
         });
     }
 }

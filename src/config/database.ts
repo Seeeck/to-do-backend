@@ -18,18 +18,18 @@ class Database {
     constructor(db: dbSettings) {
         if (db) {
             this.sequelize = new Sequelize(db.db_name, db.db_user, db.db_password, {
-                host: db.db_host, port: db.db_port, dialect: db.db_dialect
+                host: db.db_host, port: db.db_port, dialect: db.db_dialect,logging:false
             });
             this.init();
         } else {
-            throw ('To initialize the database , the server need credentials and configs');
+            throw ('To initialize the database , the server needs credentials and configs');
         }
     }
 
     public init() {
         this.initTables();
         this.sequelize?.sync();
-        console.log('inicializado');
+        console.log('Initializing database...');
     }
 
     public initTables() {
@@ -37,7 +37,7 @@ class Database {
             defineTaskModel(this.sequelize);
             defineUserModel(this.sequelize);
         } catch (e) {
-            throw ('Tables initializacion error');
+            throw ('Tables initialization error');
         }
     }
 
