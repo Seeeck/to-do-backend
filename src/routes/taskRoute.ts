@@ -28,7 +28,7 @@ taskRoute.post('/create-task', checkSchema(createTaskSchema), requestValidationM
 taskRoute.get('/list-task', checkSchema(listTaskSchema), requestValidationMiddleware, (req: Request, res: Response) => {
 
     console.log('listing tasks...')
-    return task_controller.listTask(req, res);
+    return task_controller.listTaskByUser(req, res);
 })
 
 taskRoute.get('/update-task', (req: Request, res: Response) => {
