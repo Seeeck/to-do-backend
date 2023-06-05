@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 export interface TaskInterface {
    createTask(request: Request, response: Response): Promise<Response>;
    listTaskByUser(request: Request, response: Response): Promise<Response>;
-   updateTask(request: Request, response: Response): Response;
-   deleteTask(request: Request, response: Response): Response;
+   updateTask(request: Request, response: Response):Promise<Response>;
+   deleteTask(request: Request, response: Response):Promise<Response>;
 }
 

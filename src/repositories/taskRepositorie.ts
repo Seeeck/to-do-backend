@@ -10,7 +10,6 @@ class TaskRepositorie implements TaskInterface {
     async createTask(req: Request, res: Response) {
 
         try {
-
             const request = {
                 user_id: req.body.user_id,
                 task_title: req.body.task_title,
@@ -19,24 +18,44 @@ class TaskRepositorie implements TaskInterface {
                 task_day: Date()
             };
 
-            const existsTask = await Task.findOne({ where: { user_id: request.user_id, task_title: request.task_title } });
+            const existsTask = await Task.findOne({
+                where: {
+                    user_id: request.user_id,
+                    task_title: request.task_title
+                }
+            });
 
             if (existsTask) {
-                return ApiResponse.errorResponse({ res: res, message: "task already exists.", code: 409 })
+                return ApiResponse.errorResponse(
+                    {
+                        res: res,
+                        message: `Task '${request.task_title}' already exists.`,
+                        code: 409
+                    })
             }
             const task_instance = Task.build(request)
 
-            await task_instance.save();
+            const task_saved = await task_instance.save();
 
-            return ApiResponse.successResponse({ res: res, code: 200, message: `Task ${request.task_title} saved.` });
+            return ApiResponse.successResponse({
+                res: res,
+                code: 200,
+                message: `Task saved.`,
+                data: task_saved
+            });
         } catch (error: any) {
 
 
-            return ApiResponse.errorResponse({ res: res, error: error, code: 500 })
+            return ApiResponse.errorResponse({
+                res: res,
+                error: error,
+                code: 500
+            })
         }
     }
 
-    async listTask(req: Request, res: Response) {
+    async listTaskByUser(req: Request, res: Response) {
+
         try {
             const request = {
                 user_id: req.body.user_id,
@@ -44,6 +63,7 @@ class TaskRepositorie implements TaskInterface {
                 limit: req.body.limit
 
             };
+
             const tasks_data = await Task.findAndCountAll({
                 offset: request.offset,
                 limit: request.limit,
@@ -52,21 +72,149 @@ class TaskRepositorie implements TaskInterface {
                 }
             });
 
-            return ApiResponse.successResponse({ res: res, code: 200, data: tasks_data });
+            return ApiResponse.successResponse({
+                res: res,
+                code: 200,
+                data: tasks_data
+            });
+
         } catch (error: any) {
-            return ApiResponse.errorResponse({ res: res, error: error, code: 500 })
+
+            return ApiResponse.errorResponse({
+                res: res,
+                error: error,
+                code: 500
+            })
         }
 
     }
 
-    updateTask(request: Request, response: Response) {
-        return response;
-    }
-    deleteTask(request: Request, response: Response) {
-        return response;
-    }
+    async updateTask(req: Request, res: Response) {
+
+        try {
+            const request = {
+                task_id: req.body.task_id,
+                user_id: req.body.user_id,
+                task_title: req.body?.task_title,
+                task_description: req.body?.task_description,
+                task_day: req.body?.task_day,
+                finished_task: req.body?.finished_task
+            };
+
+            const existsTask = await Task.findOne({
+                where: {
+                    user_id: request.user_id,
+                    id: request.task_id
+                }
+            });
 
 
+
+            if (!existsTask) {
+                return ApiResponse.errorResponse({
+                    res: res,
+                    message: "The task could not be found.",
+                    code: 404
+                })
+            }
+
+            const task_updated = await Task.update({
+                task_title: request?.task_title,
+                task_description: request?.task_description,
+                task_day: request?.task_day,
+                finished_task: request?.finished_task
+            }, {
+                where: {
+                    id: request.task_id,
+                    user_id: request.user_id
+                }
+            });
+
+
+            if (task_updated > [0]) {
+                return ApiResponse.successResponse({
+                    res: res,
+                    code: 200,
+                    message: `Task updated.`,
+                    data: request
+                });
+            } else {
+                return ApiResponse.errorResponse({
+                    res: res,
+                    message: "The data could not be updated.",
+                    code: 404
+                })
+            }
+
+        } catch (error: any) {
+            return ApiResponse.errorResponse({
+                res: res,
+                error: error,
+                code: 500
+            })
+        }
+
+    }
+
+    async deleteTask(req: Request, res: Response) {
+
+        try {
+
+            const request = {
+                task_id: req.body.task_id,
+                user_id: req.body.user_id,
+
+            };
+
+            const existsTask = await Task.findOne({
+                where: {
+                    user_id: request.user_id,
+                    id: request.task_id
+                }
+            });
+
+            if (!existsTask) {
+                return ApiResponse.errorResponse({
+                    res: res,
+                    message: "The task could not be found.",
+                    code: 404
+                })
+            }
+
+            const task_deleted = await Task.destroy({
+                where: {
+                    id: request.task_id,
+                    user_id: request.user_id
+                }
+            });
+
+            if (task_deleted) {
+
+                return ApiResponse.successResponse({
+                    res: res,
+                    code: 200,
+                    message: `Task updated.`,
+                    data: res
+                });
+
+            } else {
+                return ApiResponse.errorResponse({
+                    res: res,
+                    message: "task could not be deleted.",
+                    code: 500
+                });
+            }
+
+
+        } catch (error: any) {
+            return ApiResponse.errorResponse({
+                res: res,
+                error: error,
+                code: 500
+            });
+        };
+
+    }
 }
 
 export default TaskRepositorie;
