@@ -33,7 +33,7 @@ class Server {
     };
 
     initSeeder() {
-        taskSeeder();
+        taskSeeder({ users: 5, tasks: 50 });
     };
 
     initApp() {

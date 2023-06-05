@@ -4,6 +4,7 @@ import TaskRepositorie from "../repositories/taskRepositorie"
 import { checkSchema } from "express-validator"
 import createTaskSchema from "../schemas/createTaskSchema"
 import requestValidationMiddleware from "../middlewares/requestValidationMiddleware"
+import listTaskSchema from "../schemas/listTaskSchema"
 
 const express = require('express')
 const taskRoute = express.Router()
@@ -24,7 +25,7 @@ taskRoute.post('/create-task', checkSchema(createTaskSchema), requestValidationM
     return task_controller.createTask(req, res);
 })
 
-taskRoute.get('/list-task', (req: Request, res: Response) => {
+taskRoute.get('/list-task', checkSchema(listTaskSchema), requestValidationMiddleware, (req: Request, res: Response) => {
 
     console.log('listing tasks...')
     return task_controller.listTask(req, res);

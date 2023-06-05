@@ -38,10 +38,18 @@ class TaskRepositorie implements TaskInterface {
 
     async listTask(req: Request, res: Response) {
         try {
+            const request = {
+                user_id: req.body.user_id,
+                offset: req.body.offset,
+                limit: req.body.limit
 
+            };
             const tasks_data = await Task.findAndCountAll({
-                offset: 10,
-                limit: 2
+                offset: request.offset,
+                limit: request.limit,
+                where: {
+                    user_id: request.user_id
+                }
             });
 
             return ApiResponse.successResponse({ res: res, code: 200, data: tasks_data });
