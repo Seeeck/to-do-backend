@@ -1,4 +1,5 @@
 {
+  "type": "commonjs",
   "name": "to-do-backend",
   "version": "1.0.0",
   "description": "to do tasks",

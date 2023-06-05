@@ -3,7 +3,7 @@ import ApiResponse from "../helpers/apiResponse";
 const { validationResult } = require('express-validator');
 
 
-const RequestValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
+const requestValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({ code:422,message:'Request error',errors: errors.array() });
@@ -11,4 +11,4 @@ const RequestValidationMiddleware = (req: Request, res: Response, next: NextFunc
     next();
 }
 
-export default RequestValidationMiddleware;
+export default requestValidationMiddleware;

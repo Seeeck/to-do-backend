@@ -1,23 +1,54 @@
-import { Request, Response } from "express";
 
+
+import { Request, Response } from "express"
 import { TaskInterface } from "./taskInterface";
-
 import ApiResponse from "../helpers/apiResponse";
-
+import { Task } from "../models/task";
 class TaskRepositorie implements TaskInterface {
 
 
-    createTask(request: Request, response: Response) {
-      ;
+    async createTask(req: Request, res: Response) {
+
         try {
-            return ApiResponse.successResponse(response, {}, 202);
-        } catch (e) {
-            return ApiResponse.errorResponse(response, "task creation error", 505)
+
+            const request = {
+                user_id: req.body.user_id,
+                task_title: req.body.task_title,
+                task_description: req.body.task_description,
+                finished_task: false,
+                task_day: Date()
+            };
+
+            const existsTask = await Task.findOne({ where: { user_id: request.user_id, task_title: request.task_title } });
+
+            if (existsTask) {
+                return ApiResponse.errorResponse({ res: res, message: "task already exists.", code: 409 })
+            }
+            const task_instance = Task.build(request)
+
+            await task_instance.save();
+
+            return ApiResponse.successResponse({ res: res, code: 200, message: `Task ${request.task_title} saved.` });
+        } catch (error: any) {
+
+
+            return ApiResponse.errorResponse({ res: res, error: error, code: 500 })
         }
     }
 
-    listTask(request: Request, response: Response) {
-        return response;
+    async listTask(req: Request, res: Response) {
+        try {
+
+            const tasks_data = await Task.findAndCountAll({
+                offset: 10,
+                limit: 2
+            });
+
+            return ApiResponse.successResponse({ res: res, code: 200, data: tasks_data });
+        } catch (error: any) {
+            return ApiResponse.errorResponse({ res: res, error: error, code: 500 })
+        }
+
     }
 
     updateTask(request: Request, response: Response) {

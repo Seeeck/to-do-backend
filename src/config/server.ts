@@ -1,16 +1,15 @@
 
-import express, { Request, Response, Application, Router } from 'express';
-import Database from './database';
+import express, { Application } from 'express';
 import expressListRoutes from 'express-list-routes';
-
 const taskRoute = require('../routes/taskRoute');
 const userRoute = require('../routes/userRoute');
 
+import db from './database';
+import taskSeeder from '../seeders/taskSeeder';
+
 class Server {
     app: Application = express();
-    db?: Database;
     port: number = 3001;
-
 
     constructor() {
         //Inicializo la base de datos
@@ -18,20 +17,23 @@ class Server {
         this.initApp();
         this.initMiddlewares();
         this.initRoutes();
-      
         expressListRoutes(this.app);
-       
+
     };
 
     initDb() {
-
-        this.db = new Database({
-            db_name: 'to_do_database',
-            db_user: "seck",
-            db_password: "seck123456",
-            db_host: "to-do-instance.cn7g4pvobdw4.sa-east-1.rds.amazonaws.com",
-            db_port: 5432, db_dialect: "postgres"
+        console.log("synchronizing tables");
+        db.drop().then(a => {
+            db.sync().then(db => {
+                this.initSeeder();
+                console.log('tables synchronized. ')
+            });
         });
+        /* db.sync().then(db => console.log('tables synqued')); */
+    };
+
+    initSeeder() {
+        taskSeeder();
     };
 
     initApp() {
