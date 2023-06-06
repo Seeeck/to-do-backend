@@ -173,6 +173,8 @@ class TaskRepositorie implements TaskInterface {
                 }
             });
 
+
+
             if (!existsTask) {
                 return ApiResponse.errorResponse({
                     res: res,
@@ -189,12 +191,12 @@ class TaskRepositorie implements TaskInterface {
             });
 
             if (task_deleted) {
-
+                console.log('deleteado res:', res, ' ');
                 return ApiResponse.successResponse({
                     res: res,
                     code: 200,
-                    message: `Task updated.`,
-                    data: res
+                    message: `Task deleted.`,
+                    data: request
                 });
 
             } else {

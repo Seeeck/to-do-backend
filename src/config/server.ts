@@ -6,6 +6,8 @@ const userRoute = require('../routes/userRoute');
 
 import db from './database';
 import taskSeeder from '../seeders/taskSeeder';
+import authRoute from '../routes/authRoute';
+import userSeeder from '../seeders/userSeeder';
 
 class Server {
     app: Application = express();
@@ -34,6 +36,7 @@ class Server {
 
     initSeeder() {
         taskSeeder({ users: 5, tasks: 50 });
+        userSeeder({ users: 5 });
     };
 
     initApp() {
@@ -46,15 +49,13 @@ class Server {
     initRoutes() {
         this.app.use('/task', taskRoute)
         this.app.use('/user', userRoute)
+        this.app.use('/auth', authRoute)
     }
 
     initMiddlewares() {
         this.app.use(express.json());
     }
 }
-
-
-
 
 
 // Exporta la instancia de Sequelize

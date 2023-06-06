@@ -1,9 +1,6 @@
-import {  DataTypes, Model } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import { Task } from "./task";
 import db from "../config/database";
-
-
-
 
 class User extends Model {
   // Define other properties and methods of the User model here
@@ -25,6 +22,14 @@ User.init(
     email: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    birth_date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     google_id: {
       type: DataTypes.STRING,

@@ -2,8 +2,6 @@
 import { DataTypes, Model } from "sequelize";
 import db from "../config/database";
 
-
-
 class Task extends Model {
 
 }

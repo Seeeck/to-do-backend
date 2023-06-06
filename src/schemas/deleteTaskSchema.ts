@@ -1,7 +1,5 @@
 
 const deleteTaskSchema = {
-
-
     user_id: {
         notEmpty: true,
         errorMessage: 'user_id field cannot be empty.',
