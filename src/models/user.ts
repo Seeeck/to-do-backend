@@ -1,5 +1,4 @@
 import { DataTypes, Model } from "sequelize";
-import { Task } from "./task";
 import db from "../config/database";
 
 class User extends Model {
@@ -30,6 +29,11 @@ User.init(
     password: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    state: {
+      type: DataTypes.ENUM,
+      values: ['active', 'inactive', 'pending'],
+      defaultValue: "inactive"
     },
     google_id: {
       type: DataTypes.STRING,

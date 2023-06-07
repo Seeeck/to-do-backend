@@ -8,6 +8,7 @@ import db from './database';
 import taskSeeder from '../seeders/taskSeeder';
 import authRoute from '../routes/authRoute';
 import userSeeder from '../seeders/userSeeder';
+import { User } from '../models/user';
 
 class Server {
     app: Application = express();
@@ -24,14 +25,26 @@ class Server {
     };
 
     initDb() {
-        console.log("synchronizing tables");
-        db.drop().then(a => {
-            db.sync().then(db => {
-                this.initSeeder();
-                console.log('tables synchronized. ')
-            });
+
+        db.getQueryInterface().showAllTables().then(tables => {
+            console.log('tables', tables.length)
+            if (tables.length > 0) {
+
+                
+                db.drop({cascade:true}).then(a => {
+                    db.sync().then(db => {
+                        this.initSeeder();
+                        console.log('tables synchronized. ')
+                    });
+                });
+            } else {
+                db.sync().then(db => {
+                    this.initSeeder();
+                    console.log('tables synchronized. ')
+                });
+            }
         });
-        /* db.sync().then(db => console.log('tables synqued')); */
+
     };
 
     initSeeder() {

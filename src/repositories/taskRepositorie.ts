@@ -10,7 +10,7 @@ class TaskRepositorie implements TaskInterface {
     async createTask(req: Request, res: Response) {
 
         try {
-            const request = {
+            const body = {
                 user_id: req.body.user_id,
                 task_title: req.body.task_title,
                 task_description: req.body.task_description,
@@ -20,8 +20,8 @@ class TaskRepositorie implements TaskInterface {
 
             const existsTask = await Task.findOne({
                 where: {
-                    user_id: request.user_id,
-                    task_title: request.task_title
+                    user_id: body.user_id,
+                    task_title: body.task_title
                 }
             });
 
@@ -29,11 +29,11 @@ class TaskRepositorie implements TaskInterface {
                 return ApiResponse.errorResponse(
                     {
                         res: res,
-                        message: `Task '${request.task_title}' already exists.`,
+                        message: `Task '${body.task_title}' already exists.`,
                         code: 409
                     })
             }
-            const task_instance = Task.build(request)
+            const task_instance = Task.build(body)
 
             const task_saved = await task_instance.save();
 
@@ -57,7 +57,7 @@ class TaskRepositorie implements TaskInterface {
     async listTaskByUser(req: Request, res: Response) {
 
         try {
-            const request = {
+            const body = {
                 user_id: req.body.user_id,
                 offset: req.body.offset,
                 limit: req.body.limit
@@ -65,10 +65,10 @@ class TaskRepositorie implements TaskInterface {
             };
 
             const tasks_data = await Task.findAndCountAll({
-                offset: request.offset,
-                limit: request.limit,
+                offset: body.offset,
+                limit: body.limit,
                 where: {
-                    user_id: request.user_id
+                    user_id: body.user_id
                 }
             });
 
@@ -92,7 +92,7 @@ class TaskRepositorie implements TaskInterface {
     async updateTask(req: Request, res: Response) {
 
         try {
-            const request = {
+            const body = {
                 task_id: req.body.task_id,
                 user_id: req.body.user_id,
                 task_title: req.body?.task_title,
@@ -103,8 +103,8 @@ class TaskRepositorie implements TaskInterface {
 
             const existsTask = await Task.findOne({
                 where: {
-                    user_id: request.user_id,
-                    id: request.task_id
+                    user_id: body.user_id,
+                    id: body.task_id
                 }
             });
 
@@ -119,14 +119,14 @@ class TaskRepositorie implements TaskInterface {
             }
 
             const task_updated = await Task.update({
-                task_title: request?.task_title,
-                task_description: request?.task_description,
-                task_day: request?.task_day,
-                finished_task: request?.finished_task
+                task_title: body?.task_title,
+                task_description: body?.task_description,
+                task_day: body?.task_day,
+                finished_task: body?.finished_task
             }, {
                 where: {
-                    id: request.task_id,
-                    user_id: request.user_id
+                    id: body.task_id,
+                    user_id: body.user_id
                 }
             });
 
@@ -136,7 +136,7 @@ class TaskRepositorie implements TaskInterface {
                     res: res,
                     code: 200,
                     message: `Task updated.`,
-                    data: request
+                    data: body
                 });
             } else {
                 return ApiResponse.errorResponse({
@@ -160,7 +160,7 @@ class TaskRepositorie implements TaskInterface {
 
         try {
 
-            const request = {
+            const body = {
                 task_id: req.body.task_id,
                 user_id: req.body.user_id,
 
@@ -168,8 +168,8 @@ class TaskRepositorie implements TaskInterface {
 
             const existsTask = await Task.findOne({
                 where: {
-                    user_id: request.user_id,
-                    id: request.task_id
+                    user_id: body.user_id,
+                    id: body.task_id
                 }
             });
 
@@ -185,8 +185,8 @@ class TaskRepositorie implements TaskInterface {
 
             const task_deleted = await Task.destroy({
                 where: {
-                    id: request.task_id,
-                    user_id: request.user_id
+                    id: body.task_id,
+                    user_id: body.user_id
                 }
             });
 
@@ -196,7 +196,7 @@ class TaskRepositorie implements TaskInterface {
                     res: res,
                     code: 200,
                     message: `Task deleted.`,
-                    data: request
+                    data: body
                 });
 
             } else {
