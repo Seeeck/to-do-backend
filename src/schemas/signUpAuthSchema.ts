@@ -1,8 +1,7 @@
-
-
-
 import { Schema } from "express-validator";
 import isSamePassword from "../helpers/validators/isSamePassword";
+import existsEmail from "../helpers/validators/existsEmail";
+import existsUserName from "../helpers/validators/existsUserName";
 
 const signUpAuthSchema: Schema = {
 
@@ -11,7 +10,10 @@ const signUpAuthSchema: Schema = {
         isEmail: {
             errorMessage: "email must have a correct format: example@gmail.com"
         },
-        errorMessage: "email cannot be empty."
+        errorMessage: "email cannot be empty.",
+        custom: {
+            options: existsEmail
+        }
     },
     user_name: {
         notEmpty: true,
@@ -20,9 +22,12 @@ const signUpAuthSchema: Schema = {
                 min: 4,
                 max: 20
             },
-            errorMessage: "user_name must be at least 4 characters and 40 maximum. "
+            errorMessage: "user_name must have at least 4 characters and 40 maximum. "
         },
-        errorMessage: "user_name field cannot be empty."
+        errorMessage: "user_name field cannot be empty.",
+        custom: {
+            options: existsUserName
+        }
     },
     birth_date: {
         notEmpty: true,
