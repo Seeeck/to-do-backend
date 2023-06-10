@@ -14,18 +14,12 @@ class ApiResponse {
 
     static errorResponse(error: { res: Response, error?: any, message?: string, code: number }) {
         //
-        const errors = error?.error?.errors?.map((e: any) => {
-            return {
-                "message": e.message,
-                "type": e.type,
-                "origin": e.origin
-            }
-        });
+        
 
         return error.res.status(error.code).json({
             code: error.code,
             message: error?.message,
-            error: errors,
+            error: error.error,
 
         });
     }

@@ -6,7 +6,7 @@ import ApiResponse from "../helpers/apiResponse";
 import { Task } from "../models/task";
 class TaskRepositorie implements TaskInterface {
 
-
+//implementar transacciones
     async createTask(req: Request, res: Response) {
 
         try {

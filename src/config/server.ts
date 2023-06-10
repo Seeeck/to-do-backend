@@ -3,12 +3,10 @@ import express, { Application } from 'express';
 import expressListRoutes from 'express-list-routes';
 const taskRoute = require('../routes/taskRoute');
 const userRoute = require('../routes/userRoute');
-
 import db from './database';
 import taskSeeder from '../seeders/taskSeeder';
 import authRoute from '../routes/authRoute';
 import userSeeder from '../seeders/userSeeder';
-import { User } from '../models/user';
 
 class Server {
     app: Application = express();

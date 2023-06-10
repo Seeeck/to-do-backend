@@ -1,16 +1,16 @@
 import { Sequelize } from "sequelize"
-import { Task } from "../models/task";
-import { User } from "../models/user";
+require('dotenv').config();
+
 
 
 
 const db = new Sequelize(
-    'to_do_database',
-    "seck",
-    "seck123456",
+    process.env.DB_DATABASE ?? '',
+    process.env.DB_USER ?? '',
+    process.env.DB_PASSWORD ?? '',
     {
-        host: "to-do-instance.cn7g4pvobdw4.sa-east-1.rds.amazonaws.com",
-        port: 5432,
+        host: process.env.DB_HOST ?? '',
+        port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 0,
         dialect: "postgres",
         logging: false
     });
