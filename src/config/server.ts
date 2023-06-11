@@ -8,9 +8,11 @@ import taskSeeder from '../seeders/taskSeeder';
 import authRoute from '../routes/authRoute';
 import userSeeder from '../seeders/userSeeder';
 
+require('dotenv').config();
+
 class Server {
     app: Application = express();
-    port: number = 3001;
+    port: number = process.env.API_PORT ? parseInt(process.env.API_PORT) : 0;
 
     constructor() {
         //Inicializo la base de datos
@@ -28,8 +30,8 @@ class Server {
             console.log('tables', tables.length)
             if (tables.length > 0) {
 
-                
-                db.drop({cascade:true}).then(a => {
+
+                db.drop({ cascade: true }).then(a => {
                     db.sync().then(db => {
                         this.initSeeder();
                         console.log('tables synchronized. ')

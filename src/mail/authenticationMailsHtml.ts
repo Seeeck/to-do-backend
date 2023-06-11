@@ -1,7 +1,7 @@
 
-
-const linkVerifyTokenHtml = (token: string) => {
-    const html = `
+require('dotenv').config();
+const linkVerifyTokenHtml = (token: string, ip: string) => {
+  const html = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +22,7 @@ const linkVerifyTokenHtml = (token: string) => {
       </header>
       
       <div class="mt-4">
-        <h2>Pinche este <a href="https://ejemplo.com/verificar?token=${token}">link</a> para verificar la cuenta</h2>
+        <h2>Pinche este <a href="http://${process.env.API_URL}:${process.env.API_PORT}/auth/verify-account?token=${token}">link</a> para verificar la cuenta</h2>
       </div>
     </div>
   </div>
@@ -30,7 +30,7 @@ const linkVerifyTokenHtml = (token: string) => {
 </html>
 `;
 
-    return html;
+  return html;
 }
 
 export { linkVerifyTokenHtml };
