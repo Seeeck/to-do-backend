@@ -19,7 +19,9 @@ authRoute.post(
     }
 );
 
-authRoute.get('/verify-account', authController.verifyAccount)
+authRoute.get('/verify-account', (req: Request, res: Response) => {
+    return authController.verifyAccount(req, res);
+})
 
 authRoute.post('/sign-in', authController.signIn)
 
