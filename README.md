@@ -24,3 +24,9 @@ Esta es una API de gestión de tareas que te permite crear tareas y autenticarte
 ## Dependencias de desarrollo
 
 - **sequelize-cli**: ^6.6.0
+
+## Ejecutar proyecto
+
+1.Configurar variables de entorno en archivo .env (ver .env.example)
+2.Ejecutar comando npm install
+3.Ejecutar comando npm start
