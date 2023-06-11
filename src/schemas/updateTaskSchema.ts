@@ -45,6 +45,7 @@ const updateTaskSchema: Schema = {
             },
             errorMessage: "title must be at least 8 characters and 40 maximum."
         },
+        
 
     },
     task_description: {

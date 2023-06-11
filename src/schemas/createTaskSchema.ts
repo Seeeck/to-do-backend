@@ -1,6 +1,9 @@
+import { Schema } from "express-validator";
 import isFutureDate from "../helpers/validators/isFutureDate";
+import { CustomValidation } from "express-validator/src/context-items";
+import existsTask from "../helpers/validators/existsTask";
 
-const createTaskSchema = {
+const createTaskSchema: Schema = {
 
     task_title: {
         notEmpty: true,
@@ -12,6 +15,9 @@ const createTaskSchema = {
                 max: 40
             },
             errorMessage: "title must be at least 8 characters and 40 maximum."
+        },
+        custom:{
+            options:existsTask
         },
         exists: true,
     },
@@ -41,7 +47,9 @@ const createTaskSchema = {
         isInt: {
             errorMessage:"user_id must be a integer."
         }
-    }
+    },
+    
+    
 };
 
 export default createTaskSchema;

@@ -4,12 +4,15 @@ import { Request, Response } from "express"
 import { TaskInterface } from "./taskInterface";
 import ApiResponse from "../helpers/apiResponse";
 import { Task } from "../models/task";
+import db from "../config/database";
 class TaskRepositorie implements TaskInterface {
 
-//implementar transacciones
+    //implementar transacciones
     async createTask(req: Request, res: Response) {
 
+
         try {
+            const t = await db.transaction();
             const body = {
                 user_id: req.body.user_id,
                 task_title: req.body.task_title,
@@ -18,25 +21,11 @@ class TaskRepositorie implements TaskInterface {
                 task_day: Date()
             };
 
-            const existsTask = await Task.findOne({
-                where: {
-                    user_id: body.user_id,
-                    task_title: body.task_title
-                }
-            });
-
-            if (existsTask) {
-                return ApiResponse.errorResponse(
-                    {
-                        res: res,
-                        message: `Task '${body.task_title}' already exists.`,
-                        code: 409
-                    })
-            }
             const task_instance = Task.build(body)
 
-            const task_saved = await task_instance.save();
+            const task_saved = await task_instance.save({ transaction: t });
 
+            await t.commit()
             return ApiResponse.successResponse({
                 res: res,
                 code: 200,
@@ -48,7 +37,7 @@ class TaskRepositorie implements TaskInterface {
 
             return ApiResponse.errorResponse({
                 res: res,
-                error: error,
+                error: "Failed to create task.",
                 code: 500
             })
         }
@@ -56,7 +45,9 @@ class TaskRepositorie implements TaskInterface {
 
     async listTaskByUser(req: Request, res: Response) {
 
+
         try {
+
             const body = {
                 user_id: req.body.user_id,
                 offset: req.body.offset,
@@ -82,7 +73,7 @@ class TaskRepositorie implements TaskInterface {
 
             return ApiResponse.errorResponse({
                 res: res,
-                error: error,
+                error: "Failed to list tasks.",
                 code: 500
             })
         }
@@ -92,6 +83,7 @@ class TaskRepositorie implements TaskInterface {
     async updateTask(req: Request, res: Response) {
 
         try {
+            const t = await db.transaction();
             const body = {
                 task_id: req.body.task_id,
                 user_id: req.body.user_id,
@@ -107,7 +99,6 @@ class TaskRepositorie implements TaskInterface {
                     id: body.task_id
                 }
             });
-
 
 
             if (!existsTask) {
@@ -127,11 +118,13 @@ class TaskRepositorie implements TaskInterface {
                 where: {
                     id: body.task_id,
                     user_id: body.user_id
-                }
+                },
+                transaction: t
             });
 
-
+            await t.commit()
             if (task_updated > [0]) {
+
                 return ApiResponse.successResponse({
                     res: res,
                     code: 200,
@@ -139,6 +132,7 @@ class TaskRepositorie implements TaskInterface {
                     data: body
                 });
             } else {
+                await t.rollback();
                 return ApiResponse.errorResponse({
                     res: res,
                     message: "The data could not be updated.",
@@ -159,7 +153,7 @@ class TaskRepositorie implements TaskInterface {
     async deleteTask(req: Request, res: Response) {
 
         try {
-
+            const t = await db.transaction();
             const body = {
                 task_id: req.body.task_id,
                 user_id: req.body.user_id,
@@ -173,8 +167,6 @@ class TaskRepositorie implements TaskInterface {
                 }
             });
 
-
-
             if (!existsTask) {
                 return ApiResponse.errorResponse({
                     res: res,
@@ -187,19 +179,21 @@ class TaskRepositorie implements TaskInterface {
                 where: {
                     id: body.task_id,
                     user_id: body.user_id
-                }
+                },
+                transaction: t
             });
 
+            await t.commit();
             if (task_deleted) {
-                console.log('deleteado res:', res, ' ');
                 return ApiResponse.successResponse({
                     res: res,
                     code: 200,
-                    message: `Task deleted.`,
+                    message: `Task  deleted.`,
                     data: body
                 });
 
             } else {
+                await t.rollback();
                 return ApiResponse.errorResponse({
                     res: res,
                     message: "task could not be deleted.",
@@ -211,7 +205,7 @@ class TaskRepositorie implements TaskInterface {
         } catch (error: any) {
             return ApiResponse.errorResponse({
                 res: res,
-                error: error,
+                error: "Failed to delete task.",
                 code: 500
             });
         };

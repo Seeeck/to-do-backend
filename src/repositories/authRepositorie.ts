@@ -4,10 +4,11 @@ import ApiResponse from "../helpers/apiResponse";
 import { User } from "../models/user";
 import { sendMail } from "../config/email.config";
 import { linkVerifyTokenHtml } from "../mail/authenticationMailsHtml";
+import db from "../config/database";
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config");
-import db from "../config/database";
+
 class AuthRepositorie implements AuthInterface {
 
 
