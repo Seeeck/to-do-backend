@@ -30,6 +30,10 @@ User.init(
       type: DataTypes.STRING,
       allowNull: true
     },
+    auth_token: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     state: {
       type: DataTypes.ENUM,
       values: ['active', 'inactive', 'pending'],

@@ -5,6 +5,7 @@ import AuthController from "../controllers/authController";
 import requestValidationMiddleware from "../middlewares/requestValidationMiddleware";
 import { checkSchema } from "express-validator";
 import signUpAuthSchema from "../schemas/signUpAuthSchema";
+import signInAuthSchema from "../schemas/signInAuthSchema";
 
 const authRoute = Router();
 const repositorie = new AuthRepositorie();
@@ -23,7 +24,11 @@ authRoute.get('/verify-account', (req: Request, res: Response) => {
     return authController.verifyAccount(req, res);
 })
 
-authRoute.post('/sign-in', authController.signIn)
+authRoute.post('/sign-in',
+    checkSchema(signInAuthSchema),
+    requestValidationMiddleware, (req: Request, res: Response) => {
+        return authController.signIn(req, res);
+    })
 
 
 export default authRoute;

@@ -4,7 +4,6 @@ import existsEmail from "../helpers/validators/existsEmail";
 import existsUserName from "../helpers/validators/existsUserName";
 
 const signUpAuthSchema: Schema = {
-
     email: {
         notEmpty: true,
         isEmail: {
@@ -42,7 +41,7 @@ const signUpAuthSchema: Schema = {
         isLength: {
             options: { min: 8, max: 20 }
             ,
-            errorMessage: "password must have at least 6 characters and 20 maximum."
+            errorMessage: "password must have at least 8 characters and 20 maximum."
         },
         matches: {
             options: /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).+$/,

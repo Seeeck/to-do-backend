@@ -38,7 +38,7 @@ class AuthRepositorie implements AuthInterface {
       const user_saved = await user_instance.save({ transaction: t });
       const token = await jwt.sign({ user_id: user_saved.dataValues.id, state: "pending" }, config.secret, { expiresIn: '24h' });
       const html = linkVerifyTokenHtml(token, req.ip);
-      console.log("token",token)
+      console.log("token", token)
       try {
         await sendMail({ to: params.email, subject: "Verify email!", text: "Verify email!", html: html })
       } catch (error: any) {
@@ -69,7 +69,7 @@ class AuthRepositorie implements AuthInterface {
 
       const t = await db.transaction();
       const jwt_decoded = await jwt.verify(req.query.token, process.env.AUTH_SECRET);
-     console.log('jwt_decoded',jwt_decoded)
+      console.log('jwt_decoded', jwt_decoded)
       const user_updated = await User.update({
         state: 'active'
       }, {
@@ -103,7 +103,73 @@ class AuthRepositorie implements AuthInterface {
   }
 
   async signIn(req: Request, res: Response) {
-    return res;
+
+    try {
+      const t = await db.transaction();
+
+      const params = {
+        user_name_email: req.body.user_name_email,
+        password: req.body.password
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      let user: User | null = null;
+      if (emailRegex.test(params.user_name_email)) {
+        user = await User.findOne({
+          where: {
+            email: params.user_name_email
+          }
+        })
+      } else {
+        user = await User.findOne({
+          where: {
+            user_name: params.user_name_email
+          }
+        })
+      }
+
+      if (user) {
+
+        const compare = await bcrypt.compare(params.password, user.dataValues.password);
+        let token_user_update: number | [affectedCount: number] | never[] = []
+        let token = ''
+
+        if (compare) {
+          token = await jwt.sign({ user_id: user?.dataValues?.id }, config.secret, { expiresIn: '168h' });
+          token_user_update = await User.update({
+            auth_token: token
+          }, {
+            where: {
+              id: user?.dataValues.id
+            }
+          })
+        }
+
+        if (token_user_update > [0] && token) {
+          return ApiResponse.successResponse({
+            res: res,
+            code: 200,
+            message: `User logged!`,
+            data: {
+              token: token
+            }
+          });
+
+        } else {
+
+          return ApiResponse.errorResponse({ code: 500, res: res, error: "Failed to generate token." })
+
+        }
+
+
+      } else {
+        return ApiResponse.errorResponse({ code: 500, res: res, error: "Username or email or password are incorrect." })
+      }
+
+    } catch (error: any) {
+      return ApiResponse.errorResponse({ code: 500, res: res, error: error })
+    }
+
   }
 
 
