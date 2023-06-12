@@ -2,6 +2,8 @@
 
 Esta es una API de gestión de tareas que te permite crear tareas y autenticarte. A continuación, se detallan las bibliotecas y dependencias utilizadas en este proyecto:
 
+##Task api docu:https://documenter.getpostman.com/view/15885604/2s93sdYroA#602f01fb-55de-4729-a646-258425b4ad87
+##Auth api docu:https://documenter.getpostman.com/view/15885604/2s93sdYroB
 ## Dependencias
 
 - **@types/express**: ^4.17.17
