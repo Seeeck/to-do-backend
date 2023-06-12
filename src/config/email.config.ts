@@ -20,8 +20,7 @@ async function sendMail(email: { to: string, subject: string, text: string, html
             text: email.text, // plain text body
             html: email.html, // html body
         });
-        console.log("Message sent: %s", info.messageId);
-        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    
     } catch (error: any) {
         throw new Error("Failed to send email with nodemailer.")
     }

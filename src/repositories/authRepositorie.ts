@@ -38,7 +38,7 @@ class AuthRepositorie implements AuthInterface {
       const user_saved = await user_instance.save({ transaction: t });
       const token = await jwt.sign({ user_id: user_saved.dataValues.id, state: "pending" }, config.secret, { expiresIn: '24h' });
       const html = linkVerifyTokenHtml(token, req.ip);
-      console.log("token", token)
+     
       try {
         await sendMail({ to: params.email, subject: "Verify email!", text: "Verify email!", html: html })
       } catch (error: any) {
@@ -69,7 +69,7 @@ class AuthRepositorie implements AuthInterface {
 
       const t = await db.transaction();
       const jwt_decoded = await jwt.verify(req.query.token, process.env.AUTH_SECRET);
-      console.log('jwt_decoded', jwt_decoded)
+      
       const user_updated = await User.update({
         state: 'active'
       }, {

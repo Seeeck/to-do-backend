@@ -7,7 +7,7 @@ const config = require("../config/auth.config");
 
 const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     let token = req.headers.authorization
-    console.log('el token:', token)
+  
     if (!token) {
         return res.status(403).send({
             message: "No token provided!",
@@ -19,7 +19,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
         (err: any, decoded: any) => {
             if (err) {
 
-                console.log(err)
+               
                 return res.status(401).send({
                     message: "Unauthorized!",
                 });

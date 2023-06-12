@@ -27,7 +27,7 @@ class Server {
     initDb() {
 
         db.getQueryInterface().showAllTables().then(tables => {
-            console.log('tables', tables.length)
+          
             if (tables.length > 0) {
 
 

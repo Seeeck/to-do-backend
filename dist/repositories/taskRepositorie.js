@@ -31,7 +31,7 @@ class TaskRepositorie {
                 return apiResponse_1.default.successResponse(response, {}, 202);
             }
             catch (e) {
-                console.log(e);
+               
                 return apiResponse_1.default.errorResponse(response, "task creation error", 505);
             }
         });
