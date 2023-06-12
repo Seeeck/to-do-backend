@@ -7,6 +7,7 @@ import requestValidationMiddleware from "../middlewares/requestValidationMiddlew
 import listTaskSchema from "../schemas/listTaskSchema"
 import { updateTaskSchema, oneOfUpdateTask } from "../schemas/updateTaskSchema"
 import deleteTaskSchema from "../schemas/deleteTaskSchema"
+import { verifyToken } from "../middlewares/authMiddleware"
 
 
 const taskRoute = Router();
@@ -18,6 +19,7 @@ taskRoute.post(
     '/create-task',
     checkSchema(createTaskSchema),
     requestValidationMiddleware,
+    verifyToken,
     (req: Request, res: Response) => {
         return task_controller.createTask(req, res);
     }
@@ -27,6 +29,7 @@ taskRoute.get(
     '/list-task',
     checkSchema(listTaskSchema),
     requestValidationMiddleware,
+    verifyToken,
     (req: Request, res: Response) => {
         return task_controller.listTaskByUser(req, res);
     }
@@ -37,6 +40,7 @@ taskRoute.put(
     checkSchema(updateTaskSchema),
     oneOfUpdateTask(),
     requestValidationMiddleware,
+    verifyToken,
     (req: Request, res: Response) => {
         return task_controller.updateTask(req, res);
     }
@@ -45,6 +49,7 @@ taskRoute.put(
 taskRoute.delete(
     '/delete-task',
     checkSchema(deleteTaskSchema),
+    verifyToken,
     (req: Request, res: Response) => {
         return task_controller.deleteTask(req, res);
     }

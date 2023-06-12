@@ -7,6 +7,7 @@ import { checkSchema } from "express-validator";
 import signUpAuthSchema from "../schemas/signUpAuthSchema";
 import signInAuthSchema from "../schemas/signInAuthSchema";
 
+
 const authRoute = Router();
 const repositorie = new AuthRepositorie();
 const authController = new AuthController(repositorie)
@@ -15,6 +16,7 @@ authRoute.post(
     '/sign-up',
     checkSchema(signUpAuthSchema),
     requestValidationMiddleware,
+   
     (req: Request, res: Response) => {
         return authController.signUp(req, res);
     }

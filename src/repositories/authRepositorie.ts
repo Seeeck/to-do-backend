@@ -128,9 +128,9 @@ class AuthRepositorie implements AuthInterface {
         })
       }
 
-      if (user) {
+      if (user?.dataValues.state == "active") {
 
-        const compare = await bcrypt.compare(params.password, user.dataValues.password);
+        const compare = await bcrypt.compare(params.password, user?.dataValues.password);
         let token_user_update: number | [affectedCount: number] | never[] = []
         let token = ''
 
@@ -160,14 +160,12 @@ class AuthRepositorie implements AuthInterface {
           return ApiResponse.errorResponse({ code: 500, res: res, error: "Failed to generate token." })
 
         }
-
-
       } else {
-        return ApiResponse.errorResponse({ code: 500, res: res, error: "Username or email or password are incorrect." })
+        return ApiResponse.errorResponse({ code: 500, res: res, error: "The account is in state inactive or pending." })
       }
 
     } catch (error: any) {
-      return ApiResponse.errorResponse({ code: 500, res: res, error: error })
+      return ApiResponse.errorResponse({ code: 500, res: res, error: "Username or email or password are incorrect." })
     }
 
   }

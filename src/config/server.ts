@@ -26,7 +26,7 @@ class Server {
 
     initDb() {
 
-        /* db.getQueryInterface().showAllTables().then(tables => {
+        db.getQueryInterface().showAllTables().then(tables => {
             console.log('tables', tables.length)
             if (tables.length > 0) {
 
@@ -44,10 +44,8 @@ class Server {
                 });
             }
         });
- */
-        db.sync().then(db => {
-               
-        });
+
+       
 
     };
 
